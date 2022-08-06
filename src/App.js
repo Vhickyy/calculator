@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import AppCss from './App.module.css';
+import { useEffect} from 'react';
+import Calculator from './Calculator/Calculator';
+import History from './history/History';
+import {useCalculatorContext} from './CalculatorContext'
+
 
 function App() {
+  const {his,showHistory,setShowHistory} = useCalculatorContext();
+  
+  useEffect(()=>{
+    if(his.length){
+        localStorage.setItem('history',JSON.stringify(his))
+    }
+    },[his])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={AppCss.container}>
+    {!showHistory ? <Calculator /> :
+    <History/>}
+    <div className={AppCss.his} onClick={()=>setShowHistory(!showHistory)}><h3>{!showHistory ? 'his': 'back'}</h3></div>
     </div>
+   
   );
 }
 
