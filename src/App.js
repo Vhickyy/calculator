@@ -9,7 +9,7 @@ function App() {
   const {his,showHistory,setShowHistory} = useCalculatorContext();
   
   useEffect(()=>{
-    if(his.length){
+    if(his.length >= 1){
         localStorage.setItem('history',JSON.stringify(his))
     }
     },[his])

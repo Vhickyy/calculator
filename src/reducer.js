@@ -5,11 +5,11 @@ export const reducer = (state,action)=>{
          return {...state,currentVal:`0${action.payload}`,newVal:false}
         } else if((state.currentVal.toString().includes('=')|| state.currentVal.toString().includes('NaN')) && state.newVal){
              return {...state,currentVal:action.payload,newVal:false}
-        } else if(state.currentVal.toString().includes('.') && action.payload == '.'){
+        } else if(state.currentVal.toString().includes('.') && action.payload === '.'){
             return state
-        } else if(state.newVal && action.payload == 0){
+        } else if(state.newVal && action.payload === '0'){
             return {...state,currentVal:action.payload}
-        }else if(state.newVal && state.currentVal == 0){
+        }else if(state.newVal && state.currentVal === '0'){
             return {...state, currentVal:action.payload,newVal:false}
         }if(state.newVal){
             return{...state,currentVal:action.payload,newVal:false}
@@ -55,10 +55,15 @@ export const reducer = (state,action)=>{
         }
     }
     if(action.type === 'CLEAR_INPUTS'){
-        return initialState;
+        return {...initialState,his:JSON.parse(localStorage.getItem('history')) || []}
+        // return {currentVal:'',
+        //     previousVal:'',
+        //     operation:'',
+        //     newVal:true,his:JSON.parse(localStorage.getItem('history')) || [],
+        // getHis:[],}
     }
     if(action.type === 'DELETE_INPUTS'){
-        if((state.currentVal.toString().includes('=')) || (state.currentVal.length === 1) || (state.currentVal == 0)){
+        if((state.currentVal.toString().includes('=')) || (state.currentVal.length === 1) || (state.currentVal === '0')){
             return {...state,currentVal:'', newVal:true};
         }else if((state.currentVal.length) || (state.currentVal.toString().includes('.'))){
             return {...state,currentVal:state.currentVal.toString().slice(0,-1)};
@@ -99,7 +104,7 @@ export const reducer = (state,action)=>{
             const newNum = Number(current.toString().slice(1)) / 100
             return {...state,currentVal:`=${newNum}`,his:[...state.his,[current.toString().slice(1),'%',`=${newNum}`]]}
           }
-          if(!state.previousVal){
+          if(!state.previousVal  && state.currentVal !== ''){
               const newNum = Number(state.currentVal) / 100
            return {...state,currentVal:`=${newNum}`,newVal:true,his:[...state.his,[state.currentVal, '%',`=${newNum}`]]}
           }
